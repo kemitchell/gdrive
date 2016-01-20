@@ -211,11 +211,14 @@ func makeFolder(d *gdrive.Drive, title string, parentId string, share bool) (*dr
 }
 
 // Upload file to drive
-func UploadStdin(d *gdrive.Drive, input io.ReadCloser, title string, parentId string, share bool, mimeType string, convert bool) error {
+func UploadStdin(d *gdrive.Drive, input io.ReadCloser, title string, fileId string, parentId string, share bool, mimeType string, convert bool) error {
 	// File instance
 	f := &drive.File{Title: title}
-	// Set parent (if provided)
-	if parentId != "" {
+	// Set id (if provided)
+	if fileId != "" {
+    info, err := d.Files.Get(fileId).Do()
+	// Otherwise, set parent (if provided)
+	} else if parentId != "" {
 		p := &drive.ParentReference{Id: parentId}
 		f.Parents = []*drive.ParentReference{p}
 	}
@@ -245,7 +248,7 @@ func UploadStdin(d *gdrive.Drive, input io.ReadCloser, title string, parentId st
 	return err
 }
 
-func Upload(d *gdrive.Drive, input *os.File, title string, parentId string, share bool, mimeType string, convert bool) error {
+func Upload(d *gdrive.Drive, input *os.File, title string, fileId string, parentId string, share bool, mimeType string, convert bool) error {
 	// Grab file info
 	inputInfo, err := input.Stat()
 	if err != nil {

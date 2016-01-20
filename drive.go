@@ -44,6 +44,7 @@ type Options struct {
 	} `goptions:"folder"`
 
 	Upload struct {
+		FileId    string   `goptions:"-i, --id, description='File Id to overwrite'"`
 		File      *os.File `goptions:"-f, --file, mutexgroup='input', obligatory, rdonly, description='File or directory to upload'"`
 		Stdin     bool     `goptions:"-s, --stdin, mutexgroup='input', obligatory, description='Use stdin as file content'"`
 		Title     string   `goptions:"-t, --title, description='Title to give uploaded file. Defaults to filename'"`
@@ -122,9 +123,9 @@ func main() {
 		}
 
 		if args.Stdin {
-			err = cli.UploadStdin(drive, os.Stdin, args.Title, args.ParentId, args.Share, args.MimeType, args.Convert)
+			err = cli.UploadStdin(drive, os.Stdin, args.Title, args.Id, args.ParentId, args.Share, args.MimeType, args.Convert)
 		} else {
-			err = cli.Upload(drive, args.File, args.Title, args.ParentId, args.Share, args.MimeType, args.Convert)
+			err = cli.Upload(drive, args.File, args.Title, args.Id, args.ParentId, args.Share, args.MimeType, args.Convert)
 		}
 
 	case "download":
